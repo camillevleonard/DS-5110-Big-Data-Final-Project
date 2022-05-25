@@ -11,7 +11,7 @@ Air quality data gathered from EPA monitoring sites at the county-level was exam
 In the U.S., AQI is measured on a scale of 0 to 500; 500 represents the worst level of air quality. Several variables were considered in our dataset: criteria gases (ground-level ozone concentration (O3), carbon monoxide (CO), sulfur dioxide (SO2), nitrogen dioxide (NO2)), particulate matter (2.5mm and 10mm), toxins (lead, hazardous air pollutants (HAPS), nitric oxide (NO)), and meteorological factors (temperature, relative humidity, pressure, and wind). AQI scores are divided into safety levels so that the public may be informed of the conditions of the air in their area on a daily basis. Below is a chart describing the AQI values and associated health concerns.
 
 Table 1. Air Quality Index Values, Health Concerns, Color Scheme
-![](../images/image_1.png)
+![](images/image_1.png)
  
 	Ten models were run with varying sets of predictors in order to determine the features that best predicted AQI and median income in the United States. Random Forest (RF) Regression and Gradient-Boosted Tree (GBT) Classifier performed the best when predicting AQI. Median income and population density did not add any predictive power to any of the models. Linear regression models (optimized as a ridge regression) performed satisfactory at predicting both AQI and median income. 
 RF model output revealed the relative feature importance of model predictors. It was found that ozone concentration, particulate matter concentration, and temperature were the most important features when predicting AQI from the data set.
@@ -26,7 +26,7 @@ It is important to note that the analysis was not time-series based and three re
 
 Table 2.  Final data set schema. Data set contained 2,650,234 records and 25 features.
  
-![](../images/image_2.png)
+![](images/image_2.png)
 
 Data Pre-processing:
 
@@ -41,14 +41,14 @@ Outlier values were removed from the dataset. Following outlier detection, missi
 Upon constructing the data set, a correlation matrix was used to draw preliminary conclusions about the predictors’ correlation with AQI. Possible correlations exist between O3 concentration, temperature, and PM2_5NON_FRM (particulate matter). 
 
 Table 3.  Correlation Matrix
-![](../images/image_3.png)
+![](images/image_3.png)
 
 iii.	Results
 In total, ten models were tested and evaluated on the data set.  Five models were tested in order to predict AQI without socioeconomic factors, three models were tested with socioeconomic factors included, and two final models were analyzed in an effort to predict median income from the AQI parameters. The data set was split into training (80%) and holdout (20%) data sets. All models used 5-fold cross-validation in order to select the best-tuned models. 
 Pipelines were utilized with the exact process depending on the particular model. Pipeline steps included VectorAssembler, StandardScalar (when applicable), VectorIndexer (for RF), and an appropriate call to the modell. For Linear Regression, Binary Logistic Regression, and Gradient-Boosted Tree (GBT) Classifier models, a standard-scaler was used to scale the predictors before model training. For RF models, no feature scaling was performed; only  feature indexing before model training.
 
 Table 4.  Models 0 - 2, 4 - 8 Information and Performance Metrics 
-![](../images/image_4.png) 
+![](images/image_4.png) 
 
 To initialize the base-line model (model 0), Linear Regression with an intercept was fit to criteria gas data only (CO, SO2, NO2 and O3). Fifty-four iterations were tested within a parameter grid and Ridge Regression performed best.  Once applied to the holdout data, the adjusted-R2 = 0.511 and minimized root mean-squared error (RMSE) equaled 26.4.
 Next, model 1 fit a Linear Regression to the data but added pollutant, particulate matter and meteorological features. This model was an improvement over the base-line model and reduced the RMSE to 21.8 and an adjusted-R2 = 0.666.  Model 2 used the same features as Model 1, but fit a Random Forest (RF) Regression model. This performed the best and reduced the RMSE to 3.26 and adjusted-R2 = 0.993.  In addition, the most important features were shown to be 2.5mm particulate matter, temperature and ozone concentration.  
@@ -56,14 +56,14 @@ In model 3, Binary Logistic Regression was fitted to a binary response variable 
 
 Table 5.  Model 3 Information and Performance Metrics 
 
-![](../images/image_5.png)
+![](images/image_5.png)
  
 Following the initial model evaluation using criteria gas, pollutant, particulate matter and meteorological factors, socioeconomic features ‘median income’ and ‘population density’ were included in subsequent models. Model 4 utilized linear regression on only criteria gases, ‘median income’ and ‘population density’.  RMSE was only reduced slightly to 26.24 and adjusted-R2 = 0.511.  This suggests that the socioeconomic data will probably not improve the  predictive power.  In model 5, linear regression with all available data similarly achieved only miniscule improvements over model 1 without the socioeconomic factors. Model 6 was Random Forest again with all features and had a slight improvement in RMSE (3.14) and adjusted-R2 = 0.993.
 Model 7 attempted to predict median income by fitting a linear regression model to criteria gas, AQI and population density.  As expected, this performed quite terribly (RMSE = 1783.1 and adjusted-R2 = 0.127) and it is apparent these features do not help predict median income.  Then, all of the features (criteria gas, pollutants, particulate matter, meteorological data, population density) were used to predict median income for model 8.  Similarly, RMSE was only reduced slightly (1653.4) and adjusted-R2 = 0.25.  This reinforced the hypothesis that criteria gas, pollutants, particulate matter, meteorological data and population density do not do well in predicting median income at county level in the U.S.
 A final attempt was made to predict “healthy” or “unhealthy” AQI with a Gradient-Boosted Tree (GBT) Classifier (model 9). A GBT Classifier was fit to criteria gas, pollutant, particulate matter and meteorological factors (no socio-economic factors included). This model performed nearly perfectly, with an area under ROC curve = 0.999, 99.9% accuracy, and 99.9% precision on the holdout data. 
 
 Table 6.  Model 9 Information and Performance Metrics 
-![](../images/image_6.png) 
+![](images/image_6.png) 
 
 iv.	Conclusions     
 
